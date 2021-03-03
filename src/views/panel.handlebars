@@ -1,0 +1,34 @@
+
+
+
+<div class="row">
+    <div class="col-xl-6">
+        <ul>
+            {{#each accessTokens}}
+            <li class="p-2 flex-fill list-group-item">
+                <div class="card tokenCard">
+                    <h4 class="card-title text-left">{{ this.label }}</h4>
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="card-body">
+                        <label for="tokenInput{{this.token}}" class="form-label">Token</label>
+                        <input id="tokenInput{{this.token}}" value="{{this.token}}" disabled>
+                        <button class="copyBtn" data-clipboard-text="{{this.token}}">
+                            <img src="img/clippy.svg" alt="Copy to clipboard" width="13">
+                        </button>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="col-xl-4">
+        <form class="form-inline" method="POST">
+            <div class="form-group mx-sm-3 mb-2">
+                <input class="form-control form-control-lg" type="text" name="label" id="" placeholder="Label">
+            </div>
+            <input class="btn btn-primary mb-2" type="submit" value="Create New Token">
+        </form>
+    </div>
+</div>

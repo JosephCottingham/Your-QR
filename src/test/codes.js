@@ -1,13 +1,15 @@
 require('dotenv').config()
-const app = require('../server.js')
+const server = require("../server");
 const mongoose = require('mongoose')
+const cors = require('cors');
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const assert = chai.assert
 
 const User = require('../models/user.js')
 const Code = require('../models/code.js')
-const AccessToken = require('../models/accessToken.js')
+const AccessToken = require('../models/accessToken.js');
+const accessToken = require('../models/accessToken.js');
 
 
 chai.config.includeStack = true
@@ -15,6 +17,7 @@ chai.config.includeStack = true
 const expect = chai.expect
 const should = chai.should()
 chai.use(chaiHttp)
+const agent = chai.request.agent(server);
 
 /**
  * root level hooks
@@ -35,7 +38,7 @@ var ACCESS_TOKEN = null
 
 describe('Code API endpoints', () => {
     var test_code=null
-    var code_list=[]
+    var token_list=[]
 
     beforeEach((done) => {
         const sampleUser = new User({
@@ -47,33 +50,37 @@ describe('Code API endpoints', () => {
             console.log(err);
         })
         const accessToken = new AccessToken({
-            code: 'sjdfksadjdfkajskldfjsdaljfaksjdflkas',
+            token: 'sjdfksadjdfkajskldfjsdaljfaksjdflkas',
             user: sampleUser._id,
             _id: SAMPLE_OBJECT_ID_2,
         })
         accessToken.save().then(() => {
-            ACCESS_TOKEN=accessToken.code;
+            ACCESS_TOKEN=accessToken.token;
             done()
         }).catch(err =>{
             console.log(err);
+            done(err)
         })
     })
 
+
     afterEach((done) => {
         User.deleteMany({ username: ['myuser'] }).then(() => {
-            Code.deleteMany({ code: code_list })
+            Code.deleteMany({ token: token_list })
             .then(() => {
-                done()
+                AccessToken.deleteMany({_id:SAMPLE_OBJECT_ID_2}).then(() => {
+                    done()
+                })
             })
         })
     })
 
     it('should create new code', (done) => {
-        chai.request(app)
+        agent
         .post('/api/v1/codes')
-        .set('QR-Token', ACCESS_TOKEN)
+        .set('qr-token', ACCESS_TOKEN)
         .send({
-            uri:"http://www.google.com",
+            data:"http://www.google.com",
             error_correction_level:"M",
             image_width:1000,
             light_color:"#ffffff",
@@ -85,20 +92,19 @@ describe('Code API endpoints', () => {
             expect(res).to.have.status(200)
             expect(res.body.code).to.be.an("string")
             test_code=res.body.code
-            code_list.append(res.body.code)
+            token_list.push(res.body.code)
             done()
         })
     })
 
     it('should patch code', (done) => {
-        chai.request(app)
+        agent
         .patch(`/api/v1/codes/${test_code}`)
         .set('QR-Token', ACCESS_TOKEN)
         .send({
             light_color:"#fffff0",
         })
         .end((err, res) => {
-            if (err) { done(err) }
             expect(res).to.have.status(200)
             expect(res.body.code).to.be.an("string")
             expect(res.body.light_color).to.be.equal("#fffff0")
@@ -108,24 +114,26 @@ describe('Code API endpoints', () => {
 
 
     it('should get qr code file', (done) => {
-        chai.request(app)
+        agent
         .get(`/api/v1/codes/${test_code}`).end((err, res) => {
             if (err) { done(err) }
             expect(res).to.have.status(200)
-            expect(res)
-
+            expect(res.files).to.not.be.equal(null)
             done()
         })
     })
 
     it('should delete qr code file', (done) => {
-        chai.request(app)
+        agent
         .delete(`/api/v1/codes/${test_code}`).end((err, res) => {
             if (err) { done(err) }
             expect(res).to.have.status(200)
-            await Model.find({'code':test_code});
-            expect(res.files).to.not.be.equal(null)
-            done()
+            code = Code.findOne({'code':test_code}).then(code => {
+                expect(code).to.be.equal(null)
+                done()
+            }).catch(err => {
+                console.log(err);
+            })
         })
     })
 })
