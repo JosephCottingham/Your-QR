@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   yourqr:
-    image: yourqr
+    image: josephcottingham/yourqr
     build:
       context: .
       dockerfile: ./Dockerfile
