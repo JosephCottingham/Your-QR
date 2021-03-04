@@ -74,8 +74,8 @@ const router = require('./routes/index.js')
 app.use(router)
 
 // Start Server
-app.listen(process.env.PORT, () => {
-  console.log(`QR API listening on port ${process.env.PORT}!`)
+app.listen(process.env.QR_PORT || 3001, () => {
+  console.log(`QR API listening on port ${process.env.QR_PORT || 3001}!`)
 })
 
 module.exports = app

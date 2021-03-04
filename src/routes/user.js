@@ -39,7 +39,6 @@ router.post("/sign-up", (req, res) => {
   // Create User and JWT
   req.body.username = req.body.username.toLowerCase();
   const user = new User(req.body);
-  console.log(req.body.password);
   user.save().then((user) => {
     var token = jwt.sign({
       _id: user._id
@@ -68,7 +67,6 @@ router.get('/login', (req, res) => {
 router.post("/login", (req, res) => {
   const username = req.body.username.toLowerCase();
   const password = req.body.password;
-  console.log(req.body.password);
   // Find this user name
   User.findOne({
       username
@@ -76,13 +74,13 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (!user) {
         // User not found
-        return res.status(401).redirect("/login")
+        return res.redirect(401, "/login")
       }
       // Check the password
       user.comparePassword(password, (err, isMatch) => {
         if (!isMatch) {
           // Password does not match
-          return res.status(401).redirect("/login")
+          return res.redirect(401, "/login")
         }
         // Create a token
         const token = jwt.sign({
