@@ -11,8 +11,10 @@ http://www.URL_HERE.com/API/v1/
 
 ## Deployment
 
+[Docker Hub Page](https://hub.docker.com/r/josephcottingham/yourqr)
+
 ```bash
-TODO docker deployment
+docker pull josephcottingham/yourqr
 ```
 
 
