@@ -26,7 +26,7 @@ Using this account you will be able to create and remove API tokens from your ac
 
 ```bash
 curl --header 'Content-Type: application/json' \
-    --header 'QR-Token: <YOUR TOKEN HERE>' \
+    --header 'qr-token: <YOUR TOKEN HERE>' \
     --request POST \
     --data '{
         "uri":"<YOUR URL HERE>",
@@ -44,7 +44,7 @@ curl --header 'Content-Type: application/json' \
 ## Getting an QR code
 
 ```bash
-curl --header 'QR-Token: <YOUR TOKEN HERE>' \
+curl --header 'qr-token: <YOUR TOKEN HERE>' \
     --request GET \
     http://www.URL_HERE.com/api/v1/codes
 # RETURNS STATUS CODE 200
@@ -52,7 +52,7 @@ curl --header 'QR-Token: <YOUR TOKEN HERE>' \
 ```
 
 ```bash
-curl --header 'QR-Token: <YOUR TOKEN HERE>' \
+curl --header 'qr-token: <YOUR TOKEN HERE>' \
     --request GET \
     http://www.URL_HERE.com/api/v1/codes/<YOUR_QR_CODE>
 # RETURNS 200 ON SUCCESS
@@ -62,7 +62,7 @@ curl --header 'QR-Token: <YOUR TOKEN HERE>' \
 ## Deleting an QR code
 
 ```bash
-curl --header 'QR-Token: <YOUR TOKEN HERE>' \
+curl --header 'qr-token: <YOUR TOKEN HERE>' \
     --request DELETE \
     http://www.URL_HERE.com/api/v1/codes/<YOUR_QR_CODE>
 # RETURNS 200 ON SUCCESS
@@ -72,7 +72,7 @@ curl --header 'QR-Token: <YOUR TOKEN HERE>' \
 
 ```bash
 curl --header 'Content-Type: application/json' \
-    --header 'QR-Token: <YOUR TOKEN HERE>' \
+    --header 'qr-token: <YOUR TOKEN HERE>' \
     --request PATCH \
     --data '{
         "uri":"<YOUR URL HERE>",
@@ -86,6 +86,3 @@ curl --header 'Content-Type: application/json' \
 # RETURNS 200 ON SUCCESS
 # QR REFRENCE CODE
 ```
-
-
-# Python Lib
